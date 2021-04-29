@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+</head>
+
+<body>
+	<input type="file" id="inputfile" onchange="read()"><br><br>
+
+	<label><input type="checkbox" id="loop" onchange="toggleLoop();"> Loop</label><br><br>
+
+	<button onclick="speechSynthesis.pause();">Pause</button> <button onclick="speechSynthesis.resume();">Resume</button> <button onclick="stop(); speechSynthesis.cancel()">Stop</button>
+
+	<script>
+		var loop = false, msg;
+		msg = new SpeechSynthesisUtterance();
+
+		function toggleLoop() {
+			loop = loop == false ? true : false;
+		}
+
+		function stop() {
+			loop = false;
+		}
+
+		function read() {
+			var fr = new FileReader();
+			fr.readAsText(document.getElementById('inputfile').files[0]);
+
+			fr.onload = function () {
+				msg.lang = "hi";
+				msg.text = fr.result;
+				// msg.rate = 0.8;
+				window.speechSynthesis.speak(msg);
+
+				msg.onend = function () {
+					if (loop) {
+						console.log('hi');
+						read();
+					}
+				}
+			}
+		}
+	</script>
+</body>
+
+</html>
